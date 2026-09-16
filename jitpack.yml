@@ -1,0 +1,4 @@
+jdk:
+  - openjdk17
+install:
+  - gradle :agent-core:clean :agent-core:test :agent-core:publishToMavenLocal
