@@ -3,8 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.magic76.crew'
-version = '0.1.0-SNAPSHOT'
+def jitpackBuild = System.getenv('JITPACK') == 'true'
+def jitpackGroup = "${System.getenv('GROUP') ?: 'com.github.magic76'}.${System.getenv('ARTIFACT') ?: 'crew-agent-harness'}"
+def jitpackVersion = System.getenv('VERSION') ?: '0.1.0-SNAPSHOT'
+
+group = jitpackBuild ? jitpackGroup : 'com.magic76.crew'
+version = jitpackBuild ? jitpackVersion : '0.1.0-SNAPSHOT'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
