@@ -1,4 +1,4 @@
 jdk:
   - openjdk17
 install:
-  - gradle :agent-core:clean :agent-core:test :agent-core:publishToMavenLocal
+  - sdk install gradle 8.2.1 && sdk use gradle 8.2.1 && gradle --version && gradle :agent-core:clean :agent-core:test :agent-core:publishToMavenLocal
