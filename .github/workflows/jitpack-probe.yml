@@ -1,0 +1,20 @@
+name: JitPack Probe
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query JitPack build state
+        run: |
+          set +e
+          echo '=== API ==='
+          curl -i -L --max-time 30 'https://jitpack.io/api/builds/com.github.magic76/crew-agent-harness/v0.1.0'
+          echo '\n=== BUILD LOG ==='
+          curl -i -L --max-time 30 'https://jitpack.io/com/github/magic76/crew-agent-harness/v0.1.0/build.log'
+          echo '\n=== MODULE POM ==='
+          curl -i -L --max-time 30 'https://jitpack.io/com/github/magic76/crew-agent-harness/agent-core/v0.1.0/agent-core-v0.1.0.pom'
+          exit 0
