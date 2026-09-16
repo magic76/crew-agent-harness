@@ -8,12 +8,12 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify JitPack v0.1.2 module
+      - name: Verify JitPack release commit module version
         run: |
           set +e
-          version='v0.1.2'
+          version='ba4f03a408'
           pom="https://jitpack.io/com/github/magic76/crew-agent-harness/agent-core/$version/agent-core-$version.pom"
-          echo '=== MODULE POM (triggers build) ==='
+          echo '=== MODULE POM (triggers commit build) ==='
           curl -i -L --max-time 180 "$pom"
           echo '\n=== API ==='
           curl -i -L --max-time 30 "https://jitpack.io/api/builds/com.github.magic76/crew-agent-harness/$version"
