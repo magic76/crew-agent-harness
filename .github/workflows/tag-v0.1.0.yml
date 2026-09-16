@@ -1,4 +1,4 @@
-name: Tag v0.1.0
+name: Release v0.1.0
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  tag:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,13 +18,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create v0.1.0 tag once
+      - name: Ensure v0.1.0 tag exists
         run: |
-          if git rev-parse -q --verify refs/tags/v0.1.0 >/dev/null; then
-            echo "v0.1.0 already exists"
+          if ! git rev-parse -q --verify refs/tags/v0.1.0 >/dev/null; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a v0.1.0 -m "Crew Agent Harness v0.1.0"
+            git push origin v0.1.0
+          fi
+
+      - name: Ensure GitHub Release exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v0.1.0 >/dev/null 2>&1; then
+            echo "GitHub Release v0.1.0 already exists"
             exit 0
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a v0.1.0 -m "Crew Agent Harness v0.1.0"
-          git push origin v0.1.0
+          gh release create v0.1.0 \
+            --title "Crew Agent Harness v0.1.0" \
+            --notes "First shared agent-core release for Crew Helper, Crew Mate, Crew Teacher, and Crew Story."
