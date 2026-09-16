@@ -14,3 +14,20 @@ This repository hosts reusable orchestration contracts used by Crew Helper, Crew
 - provider adapters such as Gemini Live will be added separately after the core API is stable.
 
 Real-time voice can remain on Gemini Live while reasoning/self-improvement use separate model roles. The harness does not force one model for every role.
+
+## JitPack
+
+Release consumers can use the published `agent-core` module through JitPack.
+
+```groovy
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.magic76.crew-agent-harness:agent-core:v0.1.0'
+}
+```
+
+The module keeps `com.magic76.crew:agent-core:0.1.0-SNAPSHOT` for local Maven publishing and switches to JitPack's repository/tag coordinates only inside a JitPack build.
