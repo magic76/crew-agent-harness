@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.magic76.crew-agent-harness:agent-core:v0.1.0'
+    implementation 'com.github.magic76.crew-agent-harness:agent-core:v0.1.1'
 }
 ```
 
