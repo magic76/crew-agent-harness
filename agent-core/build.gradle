@@ -4,8 +4,9 @@ plugins {
 }
 
 def jitpackBuild = System.getenv('JITPACK') == 'true'
-def jitpackGroup = "${System.getenv('GROUP') ?: 'com.github.magic76'}.${System.getenv('ARTIFACT') ?: 'crew-agent-harness'}"
-def jitpackVersion = System.getenv('VERSION') ?: '0.1.0-SNAPSHOT'
+def defaultJitpackGroup = "${System.getenv('GROUP') ?: 'com.github.magic76'}.${System.getenv('ARTIFACT') ?: 'crew-agent-harness'}"
+def jitpackGroup = providers.gradleProperty('crewGroup').orElse(defaultJitpackGroup).get()
+def jitpackVersion = providers.gradleProperty('crewVersion').orElse('0.1.0-SNAPSHOT').get()
 
 group = jitpackBuild ? jitpackGroup : 'com.magic76.crew'
 version = jitpackBuild ? jitpackVersion : '0.1.0-SNAPSHOT'

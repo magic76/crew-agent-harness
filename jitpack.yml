@@ -1,4 +1,4 @@
 jdk:
   - openjdk17
 install:
-  - sdk install gradle 8.2.1 && sdk use gradle 8.2.1 && gradle --version && gradle :agent-core:clean :agent-core:test :agent-core:publishToMavenLocal
+  - JITPACK_REQUESTED_VERSION="$VERSION"; JITPACK_REQUESTED_GROUP="${GROUP}.${ARTIFACT}"; sdk install gradle 8.2.1 && sdk use gradle 8.2.1 && gradle --version && gradle -PcrewVersion="$JITPACK_REQUESTED_VERSION" -PcrewGroup="$JITPACK_REQUESTED_GROUP" :agent-core:clean :agent-core:test :agent-core:publishToMavenLocal
