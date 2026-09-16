@@ -2,7 +2,7 @@
 
 Shared provider-neutral agent runtime for Crew apps.
 
-This repository hosts reusable orchestration contracts used by Crew Helper, Crew Teacher, Crew Story, and Crew Mate. Product-specific prompts, state, permissions, approval policy, and tool implementations stay in each product.
+This repository hosts reusable orchestration contracts used by Crew Helper, Crew Teacher, Crew Story, Crew Mate, and other Crew agents. Product-specific prompts, state, permissions, approval policy, and tool implementations stay in each product.
 
 ## Runtime boundary
 
@@ -10,14 +10,41 @@ This repository hosts reusable orchestration contracts used by Crew Helper, Crew
 
 ## Modules
 
-- `agent-core`: pure Java agent loop, events, model/session contracts, tool contracts, and tests.
-- provider adapters such as Gemini Live will be added separately after the core API is stable.
+- `agent-core`: pure Java agent loop, events, model/session contracts, tool contracts, model-role routing, and tests.
+- provider adapters such as Gemini Live stay provider-specific and can live outside the core.
 
-Real-time voice can remain on Gemini Live while reasoning/self-improvement use separate model roles. The harness does not force one model for every role.
+Real-time voice can remain on Gemini Live while reasoning, generation, and self-improvement use separate model roles. The harness does not force one model for every role.
+
+## Model roles
+
+`agent-core` defines four shared responsibilities:
+
+```text
+REALTIME_CONVERSATION
+REASONING
+GENERATION
+SELF_IMPROVEMENT
+```
+
+`ModelRoleRouter` maps each role to a primary `ModelSessionProvider` plus optional fallbacks. It only selects and creates sessions. Product prompts, retry policy, state, and fallback after an already-started session fails remain product/runtime concerns.
+
+Example:
+
+```java
+ModelRoleRouter router = new ModelRoleRouter()
+        .registerPrimary(ModelRole.REALTIME_CONVERSATION, geminiLiveProvider)
+        .registerPrimary(ModelRole.REASONING, reasoningProvider)
+        .registerPrimary(ModelRole.GENERATION, storyProvider)
+        .registerPrimary(ModelRole.SELF_IMPROVEMENT, improvementProvider)
+        .addFallback(ModelRole.SELF_IMPROVEMENT, improvementFallbackProvider);
+
+ModelRoleRouter.Selection selection = router.open(ModelRole.REASONING);
+ModelSession session = selection.session();
+```
 
 ## JitPack
 
-Release consumers can use the published `agent-core` module through JitPack.
+Release consumers use the repository-level JitPack artifact:
 
 ```groovy
 repositories {
@@ -26,8 +53,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.magic76.crew-agent-harness:agent-core:v0.1.2'
+    implementation 'com.github.magic76:crew-agent-harness:v0.1.3'
 }
 ```
 
-The module keeps `com.magic76.crew:agent-core:0.1.0-SNAPSHOT` for local Maven publishing and switches to JitPack's repository/tag coordinates only inside a JitPack build.
+For local Maven publishing, the module coordinate is `com.magic76.crew:agent-core:0.1.3-SNAPSHOT`.
