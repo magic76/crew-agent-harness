@@ -8,13 +8,14 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger and query JitPack v0.1.1
+      - name: Trigger JitPack by v0.1.1 commit
         run: |
           set +e
-          echo '=== MODULE POM (triggers build) ==='
-          curl -i -L --max-time 120 'https://jitpack.io/com/github/magic76/crew-agent-harness/agent-core/v0.1.1/agent-core-v0.1.1.pom'
+          version='c5691fe3d5'
+          echo '=== MODULE POM (triggers commit build) ==='
+          curl -i -L --max-time 180 "https://jitpack.io/com/github/magic76/crew-agent-harness/agent-core/$version/agent-core-$version.pom"
           echo '\n=== API ==='
-          curl -i -L --max-time 30 'https://jitpack.io/api/builds/com.github.magic76/crew-agent-harness/v0.1.1'
+          curl -i -L --max-time 30 "https://jitpack.io/api/builds/com.github.magic76/crew-agent-harness/$version"
           echo '\n=== BUILD LOG ==='
-          curl -i -L --max-time 30 'https://jitpack.io/com/github/magic76/crew-agent-harness/v0.1.1/build.log'
+          curl -i -L --max-time 30 "https://jitpack.io/com/github/magic76/crew-agent-harness/$version/build.log"
           exit 0
